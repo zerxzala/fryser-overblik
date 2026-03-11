@@ -1,27 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#317EFB">
-    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
-    <meta name="description" content="Fryser Overblik – A Progressive Web App for Freezer Inventory Management">
-    <title>Fryser Overblik</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fryser Overblik</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a7cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fryser">
+
+<style>
+body{
+font-family:Arial;
+background:#eef4ff;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+.item{
+background:white;
+padding:10px;
+margin:10px 0;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+padding:6px 10px;
+}
+
+input, select {
+padding: 8px;
+margin: 5px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+</style>
+
 </head>
+
 <body>
-    <h1>Welcome to Fryser Overblik!</h1>
-    <p>Manage your freezer inventory with ease.</p>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(error) {
-                    console.log('ServiceWorker registration failed: ', error);
-                });
-            });
-        }
-    </script>
+
+<h1>❄️ Fryser Overblik</h1>
+
+<input id="name" placeholder="Vare">
+<input id="amount" type="number" placeholder="Antal">
+
+<select id="place">
+<option>Skabsfryser Hylde 1</option>
+<option>Skabsfryser Hylde 2</option>
+<option>Skuffe 1</option>
+<option>Skuffe 2</option>
+<option>Skuffe 3</option>
+<option>Skuffe 4</option>
+<option>Kombi Hylde 1</option>
+<option>Kombi Hylde 2</option>
+<option>Kombi Hylde 3</option>
+</select>
+
+<button onclick="addItem()">Tilføj</button>
+
+<h2>Indhold</h2>
+
+<div id="list"></div>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js');
+  });
+}
+
+let items = JSON.parse(localStorage.getItem("fryser")) || []
+
+function save(){
+localStorage.setItem("fryser",JSON.stringify(items))
+}
+
+function render(){
+
+let list = document.getElementById("list")
+list.innerHTML=""
+
+items.forEach((item,index)=>{
+
+let div=document.createElement("div")
+
+div.className="item"
+
+div.innerHTML=`
+<div>
+<strong>${item.name}</strong><br>
+${item.amount} stk<br>
+${item.place}
+</div>
+
+<div>
+<button onclick="takeOne(${index})">➖</button>
+<button onclick="deleteItem(${index})">❌</button>
+</div>
+`
+
+list.appendChild(div)
+
+})
+
+save()
+
+}
+
+function addItem(){
+
+let name=document.getElementById("name").value
+let amount=document.getElementById("amount").value
+let place=document.getElementById("place").value
+
+if(!name || !amount) return
+
+items.push({name,amount,place})
+document.getElementById("name").value = ""
+document.getElementById("amount").value = ""
+
+render()
+
+}
+
+function takeOne(i){
+
+items[i].amount--
+
+if(items[i].amount<=0){
+items.splice(i,1)
+}
+
+render()
+
+}
+
+function deleteItem(i){
+
+items.splice(i,1)
+
+render()
+
+}
+
+render()
+
+</script>
+
 </body>
 </html>
