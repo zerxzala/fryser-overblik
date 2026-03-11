@@ -1,1 +1,27 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <meta name="application-name" content="Your App Name">\n    <link rel="manifest" href="/manifest.json">\n    <title>Your App Title</title>\n</head>\n<body>\n    <h1>Welcome to Your App</h1>\n    <script>\n        if ('serviceWorker' in navigator) {\n            window.addEventListener('load', () => {\n                navigator.serviceWorker.register('/service-worker.js')\n                    .then(registration => {\n                        console.log('Service Worker registered with scope:', registration.scope);\n                    })\n                    .catch(error => {\n                        console.error('Service Worker registration failed:', error);\n                    });\n            });\n        }\n    </script>\n</body>\n</html>\n
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#317EFB">
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
+    <meta name="description" content="Fryser Overblik – A Progressive Web App for Freezer Inventory Management">
+    <title>Fryser Overblik</title>
+</head>
+<body>
+    <h1>Welcome to Fryser Overblik!</h1>
+    <p>Manage your freezer inventory with ease.</p>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(error) {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
