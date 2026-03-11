@@ -1,164 +1,73 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Freezer Overview</title>
-  <style>
-    :root{
-      --bg:#0f172a;           /* Slate-900 */
-      --panel:#111827;        /* Gray-900 */
-      --muted:#94a3b8;        /* Slate-400 */
-      --text:#e5e7eb;         /* Gray-200 */
-      --primary:#22c55e;      /* Emerald-500 */
-      --primary-600:#16a34a;
-      --danger:#ef4444;       /* Red-500 */
-      --warning:#f59e0b;      /* Amber-500 */
-      --border:#1f2937;       /* Gray-800 */
-      --card:#0b1222;         /* dark card */
-      --shadow: 0 8px 24px rgba(0,0,0,.35);
-      --radius: 12px;
-    }
-    *{box-sizing:border-box}
-    html, body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 20% 0%, #0b1328 10%, #0a1020 40%, var(--bg) 100%);
-      color: var(--text);
-      line-height:1.5;
-    }
-    header{
-      position:sticky; top:0; z-index:30;
-      backdrop-filter: blur(8px);
-      background: linear-gradient(180deg, rgba(10,16,32,.9), rgba(10,16,32,.6));
-      border-bottom:1px solid var(--border);
-    }
-    .container{
-      max-width:1100px; margin:0 auto; padding: 16px 20px;
-    }
-    .header-bar{
-      display:flex; align-items:center; gap:16px; justify-content:space-between;
-    }
-    h1{
-      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-      margin:0;
-      letter-spacing:.3px;
-    }
-    .btn{
-      display:inline-flex; align-items:center; gap:8px;
-      background: var(--primary);
-      color:#02160a; border: none; padding:10px 14px; border-radius:10px;
-      font-weight:600; cursor:pointer; box-shadow: var(--shadow);
-      transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
-    }
-    .btn.secondary{
-      background: #1f2937; color: var(--text); box-shadow:none; border:1px solid var(--border);
-    }
-    .btn.ghost{
-      background: transparent; color: var(--muted); border:1px solid var(--border); box-shadow:none;
-    }
-    .btn:hover{ transform: translateY(-1px); }
-    .btn:active{ transform: translateY(0); }
-    .grid{
-      display:grid; gap:16px;
-      grid-template-columns: 1.1fr .9fr;
-    }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-    .card{
-      background: linear-gradient(180deg, #0d1429 0%, #091024 100%);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card-header{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 16px; border-bottom:1px solid var(--border);
-    }
-    .card-title{
-      margin:0; font-size:1rem; color:#dbeafe; letter-spacing:.2px;
-    }
-    .card-body{ padding: 12px 16px 16px; }
-    .toolbar{ display:flex; gap:8px; flex-wrap:wrap; }
-    .list{
-      display:flex; flex-direction:column; gap:10px; margin:0; padding:0; list-style:none;
-    }
-    .item{
-      display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center;
-      background: #0b1222; border:1px solid var(--border); padding:12px; border-radius:10px;
-    }
-    .item h4{ margin:0 0 4px; font-size:.98rem; }
-    .meta{ color: var(--muted); font-size:.85rem; display:flex; gap:12px; flex-wrap:wrap;}
-    .tag{
-      display:inline-flex; align-items:center; gap:6px;
-      font-size:.78rem; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:#c7d2fe;background:#0e1326;
-    }
-    .qty{ color:#bbf7d0; background: #052e1a; border-color: #064e3b; }
-    .shelf{ color:#fde68a; background: #3b2d07; border-color:#a16207; }
-    .actions{ display:flex; gap:8px; }
-    .empty{
-      text-align:center; color:var(--muted); padding:24px; border:1px dashed var(--border); border-radius:10px;
-      background: repeating-linear-gradient( 45deg, #0a1225, #0a1225 10px, #081020 10px, #081020 20px);
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px;
-      background:#0b1222; border:1px solid var(--border); color:#cbd5e1; font-size:.86rem;
-    }
-
-    /* Shelf Board */
-    .shelves{
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .shelf-row{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#0b1222;
-    }
-    .shelf-name{ font-weight:600; }
-    .shelf-row .row-actions{ display:flex; gap:8px; }
-
-    /* Modal */
-    .modal-backdrop{
-      position:fixed; inset:0; background: rgba(2,6,23,.6);
-      display:none; align-items:center; justify-content:center; padding:16px; z-index:100;
-    }
-    .modal{
-      width: min(520px, 100%);
-      background: linear-gradient(180deg, #0f172a 0%, #0b1328 100%);
-      border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow);
-    }
-    .modal header{
-      position:unset; backdrop-filter:none; background:transparent; border:none;
-    }
-    .modal .modal-header{
-      display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border);
-    }
-    .modal h3{ margin:0; font-size:1.1rem; }
-    .modal .modal-body{ padding:16px; display:flex; flex-direction:column; gap:12px; }
-    .modal .modal-footer{ padding:12px 16px 16px; display:flex; justify-content:flex-end; gap:8px; }
-    label{ font-size:.9rem; color:#cbd5e1; }
-    input, select{
-      width:100%; background:#0b1222; color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px;
-      outline:none;
-    }
-    input:focus, select:focus{ border-color:#334155; box-shadow: 0 0 0 3px rgba(51,65,85,.35); }
-    .danger{ background: var(--danger); color:#2b0808; }
-    .warning{ background: var(--warning); color:#231a02; }
-    .muted{ color: var(--muted); }
-    .row{ display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-    @media (max-width:600px){ .row{ grid-template-columns: 1fr; } }
-
-    /* Small subtle separator */
-    .sep{ height:1px; background: linear-gradient(90deg, transparent, #1f2937, transparent); margin:8px 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freezer Overview</title>
 </head>
 <body>
-  <header>
-    <div class="container header-bar">
-      <div style="display:flex; align-items:center; gap:10px;">
+    <header>
         <h1>Freezer Overview</h1>
-        <span class="pill" id="freezer-name-pill" title="Navn på fryser">Standard Fryser</span>
-      </div>
-      <div class="toolbar">
+        <button id="settings-btn">Settings</button>
+    </header>
+    <main>
+        <section id="items">
+            <h2>Items</h2>
+            <ul id="item-list">
+                <!-- Dynamic list of items will be generated here -->
+            </ul>
+            <button id="add-item-btn">Add Item</button>
+        </section>
+    </main>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" style="display:none;">
+        <h2>Edit Item</h2>
+        <form id="edit-item-form">
+            <input type="text" id="item-name" placeholder="Item Name" required />
+            <input type="number" id="item-quantity" placeholder="Quantity" required />
+            <button type="submit">Save</button>
+            <button type="button" id="close-edit-modal">Close</button>
+        </form>
+    </div>
+
+    <!-- Photo Modal -->
+    <div id="photo-modal" style="display:none;">
+        <h2>Add Photo</h2>
+        <input type="file" id="photo-input" />
+        <button id="upload-photo-btn">Upload</button>
+        <button type="button" id="close-photo-modal">Close</button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" style="display:none;">
+        <h2>Settings</h2>
+        <form id="settings-form">
+            <input type="text" id="freezer-name" placeholder="Freezer Name" required />
+            <button type="submit">Save</button>
+            <button type="button" id="close-settings-modal">Close</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript for modals and functionalities
+        document.getElementById('add-item-btn').addEventListener('click', function() {
+            // Open edit modal for adding new item
+            document.getElementById('edit-modal').style.display = 'block';
+        });
+
+        document.getElementById('close-edit-modal').addEventListener('click', function() {
+            document.getElementById('edit-modal').style.display = 'none';
+        });
+
+        // Handle edit item submission
+        document.getElementById('edit-item-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Logic for updating item...
+            document.getElementById('edit-modal').style.display = 'none';
+        });
+
+        // Similar functions for photo modal and settings modal
+    </script>
+</body>
+</html>
