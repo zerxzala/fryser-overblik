@@ -1,995 +1,164 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fryser Overblik</title>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2196F3">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Fryser">
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 15px;
-}
-
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-h1 {
-  text-align: center;
-  color: white;
-  margin-bottom: 30px;
-  font-size: 28px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.settings-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: white;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s;
-}
-
-.settings-btn:active {
-  transform: scale(0.95);
-}
-
-.add-section {
-  background: white;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.add-section h2 {
-  color: #333;
-  font-size: 16px;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.form-group {
-  margin-bottom: 12px;
-}
-
-input, select {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.3s;
-  font-family: inherit;
-}
-
-input:focus, select:focus {
-  outline: none;
-  border-color: #667eea;
-  background: #f5f7ff;
-}
-
-.photo-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.photo-btn, .camera-btn {
-  flex: 1;
-  padding: 12px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.camera-btn {
-  background: #FF6B6B;
-}
-
-.photo-btn:active, .camera-btn:active {
-  transform: scale(0.95);
-}
-
-.photo-preview {
-  width: 100%;
-  height: 120px;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 2px solid #667eea;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-}
-
-.add-btn {
-  flex: 1;
-  padding: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.add-btn:active {
-  transform: scale(0.98);
-}
-
-.clear-btn {
-  padding: 12px 15px;
-  background: #f0f0f0;
-  color: #666;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.clear-btn:active {
-  background: #e0e0e0;
-}
-
-h3 {
-  color: white;
-  margin-bottom: 15px;
-  font-size: 18px;
-}
-
-.list-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-.item {
-  background: white;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  display: flex;
-  gap: 12px;
-  transition: all 0.3s;
-  position: relative;
-}
-
-.item:active {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.item-photo {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: #f0f0f0;
-  flex-shrink: 0;
-  border: 2px solid #e0e0e0;
-  cursor: pointer;
-  position: relative;
-}
-
-.photo-placeholder {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  background: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ccc;
-  font-size: 24px;
-  flex-shrink: 0;
-  border: 2px solid #e0e0e0;
-  cursor: pointer;
-}
-
-.item-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.item-name {
-  font-weight: 700;
-  color: #333;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.item-name:hover {
-  color: #667eea;
-}
-
-.item-place {
-  color: #999;
-  font-size: 13px;
-  margin-top: 4px;
-  cursor: pointer;
-}
-
-.item-place:hover {
-  color: #667eea;
-}
-
-.item-amount {
-  color: #667eea;
-  font-weight: 700;
-  font-size: 18px;
-  margin-top: 6px;
-}
-
-.item-actions {
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.amount-btn, .delete-btn, .photo-add-btn, .edit-btn {
-  padding: 8px 10px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-.amount-btn {
-  background: #FFD93D;
-  color: #333;
-}
-
-.delete-btn {
-  background: #FF6B6B;
-  color: white;
-}
-
-.photo-add-btn {
-  background: #4ECDC4;
-  color: white;
-  font-size: 12px;
-}
-
-.edit-btn {
-  background: #95E1D3;
-  color: #333;
-  font-size: 12px;
-}
-
-.amount-btn:active, .delete-btn:active, .photo-add-btn:active, .edit-btn:active {
-  transform: scale(0.95);
-}
-
-.empty-message {
-  text-align: center;
-  color: white;
-  padding: 40px 20px;
-  font-size: 16px;
-  opacity: 0.9;
-}
-
-#fileInput, .file-input-hidden {
-  display: none;
-}
-
-.location-group {
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 5px;
-}
-
-.location-group label {
-  display: block;
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 8px;
-  font-size: 13px;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  overflow: auto;
-}
-
-.modal-content {
-  background-color: white;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-.modal-close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.modal-close:hover {
-  color: black;
-}
-
-.modal h2 {
-  color: #333;
-  margin-bottom: 15px;
-  clear: both;
-}
-
-.modal-photo-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.modal-photo-btn {
-  flex: 1;
-  padding: 10px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.modal-camera-btn {
-  background: #FF6B6B;
-}
-
-.modal-photo-preview {
-  width: 100%;
-  height: 150px;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 2px solid #667eea;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.modal-save-btn, .modal-cancel-btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.modal-save-btn {
-  background: #667eea;
-  color: white;
-}
-
-.modal-cancel-btn {
-  background: #f0f0f0;
-  color: #666;
-}
-
-.settings-form-group {
-  margin-bottom: 15px;
-}
-
-.settings-form-group label {
-  display: block;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.settings-form-group input {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.settings-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.settings-save-btn, .settings-cancel-btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.settings-save-btn {
-  background: #667eea;
-  color: white;
-}
-
-.settings-cancel-btn {
-  background: #f0f0f0;
-  color: #666;
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freezer Overview</title>
+  <style>
+    :root{
+      --bg:#0f172a;           /* Slate-900 */
+      --panel:#111827;        /* Gray-900 */
+      --muted:#94a3b8;        /* Slate-400 */
+      --text:#e5e7eb;         /* Gray-200 */
+      --primary:#22c55e;      /* Emerald-500 */
+      --primary-600:#16a34a;
+      --danger:#ef4444;       /* Red-500 */
+      --warning:#f59e0b;      /* Amber-500 */
+      --border:#1f2937;       /* Gray-800 */
+      --card:#0b1222;         /* dark card */
+      --shadow: 0 8px 24px rgba(0,0,0,.35);
+      --radius: 12px;
+    }
+    *{box-sizing:border-box}
+    html, body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% 0%, #0b1328 10%, #0a1020 40%, var(--bg) 100%);
+      color: var(--text);
+      line-height:1.5;
+    }
+    header{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(10,16,32,.9), rgba(10,16,32,.6));
+      border-bottom:1px solid var(--border);
+    }
+    .container{
+      max-width:1100px; margin:0 auto; padding: 16px 20px;
+    }
+    .header-bar{
+      display:flex; align-items:center; gap:16px; justify-content:space-between;
+    }
+    h1{
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      margin:0;
+      letter-spacing:.3px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      background: var(--primary);
+      color:#02160a; border: none; padding:10px 14px; border-radius:10px;
+      font-weight:600; cursor:pointer; box-shadow: var(--shadow);
+      transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .btn.secondary{
+      background: #1f2937; color: var(--text); box-shadow:none; border:1px solid var(--border);
+    }
+    .btn.ghost{
+      background: transparent; color: var(--muted); border:1px solid var(--border); box-shadow:none;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0); }
+    .grid{
+      display:grid; gap:16px;
+      grid-template-columns: 1.1fr .9fr;
+    }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .card{
+      background: linear-gradient(180deg, #0d1429 0%, #091024 100%);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px; border-bottom:1px solid var(--border);
+    }
+    .card-title{
+      margin:0; font-size:1rem; color:#dbeafe; letter-spacing:.2px;
+    }
+    .card-body{ padding: 12px 16px 16px; }
+    .toolbar{ display:flex; gap:8px; flex-wrap:wrap; }
+    .list{
+      display:flex; flex-direction:column; gap:10px; margin:0; padding:0; list-style:none;
+    }
+    .item{
+      display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center;
+      background: #0b1222; border:1px solid var(--border); padding:12px; border-radius:10px;
+    }
+    .item h4{ margin:0 0 4px; font-size:.98rem; }
+    .meta{ color: var(--muted); font-size:.85rem; display:flex; gap:12px; flex-wrap:wrap;}
+    .tag{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:.78rem; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:#c7d2fe;background:#0e1326;
+    }
+    .qty{ color:#bbf7d0; background: #052e1a; border-color: #064e3b; }
+    .shelf{ color:#fde68a; background: #3b2d07; border-color:#a16207; }
+    .actions{ display:flex; gap:8px; }
+    .empty{
+      text-align:center; color:var(--muted); padding:24px; border:1px dashed var(--border); border-radius:10px;
+      background: repeating-linear-gradient( 45deg, #0a1225, #0a1225 10px, #081020 10px, #081020 20px);
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px;
+      background:#0b1222; border:1px solid var(--border); color:#cbd5e1; font-size:.86rem;
+    }
+
+    /* Shelf Board */
+    .shelves{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .shelf-row{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#0b1222;
+    }
+    .shelf-name{ font-weight:600; }
+    .shelf-row .row-actions{ display:flex; gap:8px; }
+
+    /* Modal */
+    .modal-backdrop{
+      position:fixed; inset:0; background: rgba(2,6,23,.6);
+      display:none; align-items:center; justify-content:center; padding:16px; z-index:100;
+    }
+    .modal{
+      width: min(520px, 100%);
+      background: linear-gradient(180deg, #0f172a 0%, #0b1328 100%);
+      border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow);
+    }
+    .modal header{
+      position:unset; backdrop-filter:none; background:transparent; border:none;
+    }
+    .modal .modal-header{
+      display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border);
+    }
+    .modal h3{ margin:0; font-size:1.1rem; }
+    .modal .modal-body{ padding:16px; display:flex; flex-direction:column; gap:12px; }
+    .modal .modal-footer{ padding:12px 16px 16px; display:flex; justify-content:flex-end; gap:8px; }
+    label{ font-size:.9rem; color:#cbd5e1; }
+    input, select{
+      width:100%; background:#0b1222; color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px;
+      outline:none;
+    }
+    input:focus, select:focus{ border-color:#334155; box-shadow: 0 0 0 3px rgba(51,65,85,.35); }
+    .danger{ background: var(--danger); color:#2b0808; }
+    .warning{ background: var(--warning); color:#231a02; }
+    .muted{ color: var(--muted); }
+    .row{ display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+    @media (max-width:600px){ .row{ grid-template-columns: 1fr; } }
+
+    /* Small subtle separator */
+    .sep{ height:1px; background: linear-gradient(90deg, transparent, #1f2937, transparent); margin:8px 0; }
+  </style>
 </head>
-
 <body>
-
-<button class="settings-btn" onclick="openSettingsModal()">⚙️</button>
-
-<div class="container">
-
-<h1>❄️ Fryser Overblik</h1>
-
-<div class="add-section">
-  <h2>➕ Tilføj Vare</h2>
-  
-  <div class="form-group">
-    <input id="name" type="text" placeholder="Varenavn (f.eks. Køkkenchili)" maxlength="30">
-  </div>
-
-  <div class="form-group">
-    <input id="amount" type="number" placeholder="Antal" min="1" value="1">
-  </div>
-
-  <div class="form-group">
-    <div class="location-group">
-      <label id="freezer-label">📦 Fryseskab</label>
-      <select id="place-freezer">
-        <option value="">-- Vælg hylder --</option>
-        <option>Hylde 1 (Top)</option>
-        <option>Hylde 2</option>
-        <option>Hylde 3</option>
-        <option>Hylde 4 (Bund)</option>
-        <option>Skuffe (Frostfrisk)</option>
-      </select>
-    </div>
-
-    <div class="location-group">
-      <label id="combo-label">🧊 Køle-/Fryseskab</label>
-      <select id="place-combo">
-        <option value="">-- Vælg plads --</option>
-        <option>Køler - Topfrosting</option>
-        <option>Køler - Hylde 1</option>
-        <option>Køler - Hylde 2</option>
-        <option>Køler - Grøntsagsskuffe</option>
-        <option>Fryserdel - Hylde 1</option>
-        <option>Fryserdel - Hylde 2</option>
-        <option>Fryserdel - Skuffe</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="photo-section">
-    <button class="photo-btn" onclick="document.getElementById('fileInput').click()">📷 Upload Foto</button>
-    <button class="camera-btn" onclick="takePhoto()">📸 Tag Billede</button>
-  </div>
-
-  <img id="photoPreview" class="photo-preview" style="display:none;">
-
-  <div class="button-group">
-    <button class="add-btn" onclick="addItem()">Tilføj Vare</button>
-    <button class="clear-btn" onclick="clearForm()">Slet</button>
-  </div>
-</div>
-
-<h3>📋 Inventar</h3>
-
-<div id="list" class="list-container"></div>
-
-<div id="emptyMsg" class="empty-message">
-  Intet i inventaret endnu. Tilføj din første vare! 🎉
-</div>
-
-</div>
-
-<!-- Settings Modal -->
-<div id="settingsModal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close" onclick="closeSettingsModal()">&times;</span>
-    <h2>⚙️ Indstillinger</h2>
-    
-    <div class="settings-form-group">
-      <label>Navn på Fryseskab:</label>
-      <input id="freezer-name" type="text" placeholder="f.eks. Bosch GSN58AWDP" maxlength="40">
-    </div>
-
-    <div class="settings-form-group">
-      <label>Navn på Køle-/Fryseskab:</label>
-      <input id="combo-name" type="text" placeholder="f.eks. Scandomestic SKF 231 W" maxlength="40">
-    </div>
-
-    <div class="settings-actions">
-      <button class="settings-save-btn" onclick="saveSettings()">Gem</button>
-      <button class="settings-cancel-btn" onclick="closeSettingsModal()">Annuller</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal for editing item -->
-<div id="editModal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close" onclick="closeEditModal()">&times;</span>
-    <h2>✏️ Rediger Vare</h2>
-    
-    <div class="settings-form-group">
-      <label>Varenavn:</label>
-      <input id="edit-name" type="text" placeholder="Varenavn" maxlength="30">
-    </div>
-
-    <div class="settings-form-group">
-      <label>Antal:</label>
-      <input id="edit-amount" type="number" placeholder="Antal" min="1">
-    </div>
-
-    <div class="settings-form-group">
-      <label>Placering:</label>
-      <select id="edit-place">
-        <option value="">-- Vælg plads --</option>
-      </select>
-    </div>
-
-    <div class="settings-actions">
-      <button class="settings-save-btn" onclick="saveEditItem()">Gem Ændringer</button>
-      <button class="settings-cancel-btn" onclick="closeEditModal()">Annuller</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal for editing photo -->
-<div id="photoModal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close" onclick="closePhotoModal()">&times;</span>
-    <h2>📸 Tilføj Billede</h2>
-    
-    <div class="modal-photo-section">
-      <button class="modal-photo-btn" onclick="document.getElementById('modalFileInput').click()">📷 Upload</button>
-      <button class="modal-photo-btn modal-camera-btn" onclick="takePhotoModal()">📸 Tag</button>
-    </div>
-
-    <img id="modalPhotoPreview" class="modal-photo-preview" style="display:none;">
-
-    <div class="modal-actions">
-      <button class="modal-save-btn" onclick="savePhotoToItem()">Gem Billede</button>
-      <button class="modal-cancel-btn" onclick="closePhotoModal()">Annuller</button>
-    </div>
-  </div>
-</div>
-
-<input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
-<input type="file" id="modalFileInput" accept="image/*" onchange="handleModalFileSelect(event)" class="file-input-hidden">
-<video id="video" style="display:none;"></video>
-<video id="modalVideo" style="display:none;"></video>
-<canvas id="canvas" style="display:none;"></canvas>
-<canvas id="modalCanvas" style="display:none;"></canvas>
-
-<script>
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js');
-  });
-}
-
-let items = JSON.parse(localStorage.getItem("fryser")) || [];
-let currentPhoto = null;
-let currentPhotoModalIndex = null;
-let currentPhotoModal = null;
-let currentEditIndex = null;
-
-// Navn på fryserne
-let freezerName = localStorage.getItem("freezerName") || "📦 Fryseskab";
-let comboName = localStorage.getItem("comboName") || "🧊 Køle-/Fryseskab";
-
-const freezerOptions = [
-  "Hylde 1 (Top)",
-  "Hylde 2",
-  "Hylde 3",
-  "Hylde 4 (Bund)",
-  "Skuffe (Frostfrisk)"
-];
-
-const comboOptions = [
-  "Køler - Topfrosting",
-  "Køler - Hylde 1",
-  "Køler - Hylde 2",
-  "Køler - Grøntsagsskuffe",
-  "Fryserdel - Hylde 1",
-  "Fryserdel - Hylde 2",
-  "Fryserdel - Skuffe"
-];
-
-function updateLabels() {
-  document.getElementById("freezer-label").textContent = freezerName;
-  document.getElementById("combo-label").textContent = comboName;
-}
-
-function save() {
-  localStorage.setItem("fryser", JSON.stringify(items));
-  render();
-}
-
-function render() {
-  let list = document.getElementById("list");
-  let emptyMsg = document.getElementById("emptyMsg");
-  list.innerHTML = "";
-
-  if (items.length === 0) {
-    emptyMsg.style.display = "block";
-    return;
-  }
-
-  emptyMsg.style.display = "none";
-
-  items.forEach((item, index) => {
-    let div = document.createElement("div");
-    div.className = "item";
-
-    let photoElement = '';
-    if (item.photo) {
-      photoElement = `<img src="${item.photo}" class="item-photo" onclick="openPhotoModal(${index})">`;
-    } else {
-      photoElement = `<div class="photo-placeholder" onclick="openPhotoModal(${index})">📷</div>`;
-    }
-
-    div.innerHTML = `
-      ${photoElement}
-      <div class="item-content">
-        <div class="item-name" onclick="openEditModal(${index})">${item.name}</div>
-        <div class="item-place" onclick="openEditModal(${index})">${item.place}</div>
-        <div class="item-amount">${item.amount} stk</div>
+  <header>
+    <div class="container header-bar">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <h1>Freezer Overview</h1>
+        <span class="pill" id="freezer-name-pill" title="Navn på fryser">Standard Fryser</span>
       </div>
-      <div class="item-actions">
-        <button class="photo-add-btn" onclick="openPhotoModal(${index})">🖼️</button>
-        <button class="edit-btn" onclick="openEditModal(${index})">✏️</button>
-        <button class="amount-btn" onclick="decreaseAmount(${index})">➖</button>
-        <button class="delete-btn" onclick="deleteItem(${index})">❌</button>
-      </div>
-    `;
-
-    list.appendChild(div);
-  });
-
-  save();
-}
-
-function addItem() {
-  let name = document.getElementById("name").value.trim();
-  let amount = parseInt(document.getElementById("amount").value) || 1;
-  let place = document.getElementById("place-freezer").value || document.getElementById("place-combo").value;
-
-  if (!name) {
-    alert("Indtast venligst et varenavn");
-    return;
-  }
-
-  if (!place) {
-    alert("Vælg venligst en placering");
-    return;
-  }
-
-  items.push({
-    name: name,
-    amount: amount,
-    place: place,
-    photo: currentPhoto
-  });
-
-  clearForm();
-  save();
-}
-
-function decreaseAmount(i) {
-  items[i].amount--;
-  if (items[i].amount <= 0) {
-    items.splice(i, 1);
-  }
-  save();
-}
-
-function deleteItem(i) {
-  items.splice(i, 1);
-  save();
-}
-
-function clearForm() {
-  document.getElementById("name").value = "";
-  document.getElementById("amount").value = "1";
-  document.getElementById("place-freezer").value = "";
-  document.getElementById("place-combo").value = "";
-  document.getElementById("photoPreview").style.display = "none";
-  currentPhoto = null;
-}
-
-function handleFileSelect(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      currentPhoto = e.target.result;
-      document.getElementById("photoPreview").src = currentPhoto;
-      document.getElementById("photoPreview").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function handleModalFileSelect(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      currentPhotoModal = e.target.result;
-      document.getElementById("modalPhotoPreview").src = currentPhotoModal;
-      document.getElementById("modalPhotoPreview").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function takePhoto() {
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-
-  if (!video.srcObject) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-        video.style.display = 'block';
-        setTimeout(() => {
-          capturePhoto();
-        }, 1000);
-      })
-      .catch(err => alert("Kamera adgang blev nægtet"));
-  }
-}
-
-function capturePhoto() {
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
-    
-    currentPhoto = canvas.toDataURL('image/jpeg');
-    document.getElementById("photoPreview").src = currentPhoto;
-    document.getElementById("photoPreview").style.display = "block";
-
-    video.srcObject.getTracks().forEach(track => track.stop());
-    video.style.display = 'none';
-  }
-}
-
-function takePhotoModal() {
-  const video = document.getElementById('modalVideo');
-  const canvas = document.getElementById('modalCanvas');
-
-  if (!video.srcObject) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-        video.style.display = 'block';
-        setTimeout(() => {
-          capturePhotoModal();
-        }, 1000);
-      })
-      .catch(err => alert("Kamera adgang blev nægtet"));
-  }
-}
-
-function capturePhotoModal() {
-  const video = document.getElementById('modalVideo');
-  const canvas = document.getElementById('modalCanvas');
-
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
-    
-    currentPhotoModal = canvas.toDataURL('image/jpeg');
-    document.getElementById("modalPhotoPreview").src = currentPhotoModal;
-    document.getElementById("modalPhotoPreview").style.display = "block";
-
-    video.srcObject.getTracks().forEach(track => track.stop());
-    video.style.display = 'none';
-  }
-}
-
-function openPhotoModal(index) {
-  currentPhotoModalIndex = index;
-  currentPhotoModal = items[index].photo;
-  
-  if (currentPhotoModal) {
-    document.getElementById("modalPhotoPreview").src = currentPhotoModal;
-    document.getElementById("modalPhotoPreview").style.display = "block";
-  } else {
-    document.getElementById("modalPhotoPreview").style.display = "none";
-  }
-  
-  document.getElementById("photoModal").style.display = "block";
-}
-
-function closePhotoModal() {
-  document.getElementById("photoModal").style.display = "none";
-  document.getElementById("modalPhotoPreview").style.display = "none";
-  currentPhotoModal = null;
-  currentPhotoModalIndex = null;
-  
-  const video = document.getElementById('modalVideo');
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(track => track.stop());
-    video.style.display = 'none';
-  }
-}
-
-function savePhotoToItem() {
-  if (currentPhotoModalIndex !== null && currentPhotoModal) {
-    items[currentPhotoModalIndex].photo = currentPhotoModal;
-    save();
-    closePhotoModal();
-  } else {
-    alert("Vælg venligst et billede først");
-  }
-}
-
-function openEditModal(index) {
-  currentEditIndex = index;
-  const item = items[index];
-  
-  document.getElementById("edit-name").value = item.name;
-  document.getElementById("edit-amount").value = item.amount;
-  
-  // Udfyld valgmulighederne
-  const editPlace = document.getElementById("edit-place");
-  editPlace.innerHTML = '<option value="">-- Vælg plads --</option>';
-  
-  freezerOptions.forEach(opt => {
-    editPlace.innerHTML += `<option>${opt}</option>`;
-  });
-  editPlace.innerHTML += '<option disabled>─────────</option>';
-  comboOptions.forEach(opt => {
-    editPlace.innerHTML += `<option>${opt}</option>`;
-  });
-  
-  editPlace.value = item.place;
-  
-  document.getElementById("editModal").style.display = "block";
-}
-
-function closeEditModal() {
-  document.getElementById("editModal").style.display = "none";
-  currentEditIndex = null;
-}
-
-function saveEditItem() {
-  if (currentEditIndex !== null) {
-    const newName = document.getElementById("edit-name").value.trim();
-    const newAmount = parseInt(document.getElementById("edit-amount").value) || 1;
-    const newPlace = document.getElementById("edit-place").value;
-    
-    if (!newName) {
-      alert("Indtast venligst et varenavn");
-      return;
-    }
-    
-    if (!newPlace) {
-      alert("Vælg venligst en placering");
-      return;
-    }
-    
-    items[currentEditIndex].name = newName;
-    items[currentEditIndex].amount = newAmount;
-    items[currentEditIndex].place = newPlace;
-    
-    save();
-    closeEditModal();
-  }
-}
-
-function openSettingsModal() {
-  document.getElementById("freezer-name").value = freezerName.replace("📦 ", "");
-  document.getElementById("combo-name").value = comboName.replace("🧊 ", "");
-  document.getElementById("settingsModal").style.display = "block";
-}
-
-function closeSettingsModal() {
-  document.getElementById("settingsModal").style.display = "none";
-}
-
-function saveSettings() {
-  let newFreezerName = document.getElementById("freezer-name").value.trim() || "Fryseskab";
-  let newComboName = document.getElementById("combo-name").value.trim() || "Køle-/Fryseskab";
-
-  freezerName = "📦 " + newFreezerName;
-  comboName = "🧊 " + newComboName;
-
-  localStorage.setItem("freezerName", freezerName);
-  localStorage.setItem("comboName", comboName);
-
-  updateLabels();
-  closeSettingsModal();
-}
-
-window.onclick = function(event) {
-  const photoModal = document.getElementById("photoModal");
-  const settingsModal = document.getElementById("settingsModal");
-  const editModal = document.getElementById("editModal");
-  
-  if (event.target == photoModal) {
-    closePhotoModal();
-  }
-  if (event.target == settingsModal) {
-    closeSettingsModal();
-  }
-  if (event.target == editModal) {
-    closeEditModal();
-  }
-}
-
-updateLabels();
-render();
-
-</script>
-
-</body>
-</html>
+      <div class="toolbar">
