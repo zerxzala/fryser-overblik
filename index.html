@@ -1,73 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freezer Overview</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freezer Overview</title>
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb;
+      --primary:#22c55e; --primary-600:#16a34a; --danger:#ef4444; --warning:#f59e0b;
+      --border:#1f2937; --card:#0b1222; --shadow: 0 8px 24px rgba(0,0,0,.35); --radius: 12px;
+    }
+    *{box-sizing:border-box} html, body{height:100%}
+    body{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% 0%, #0b1328 10%, #0a1020 40%, var(--bg) 100%); color: var(--text); line-height:1.5; }
+    header{ position:sticky; top:0; z-index:30; backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(10,16,32,.9), rgba(10,16,32,.6)); border-bottom:1px solid var(--border); }
+    .container{ max-width:1100px; margin:0 auto; padding: 16px 20px; }
+    .header-bar{ display:flex; align-items:center; gap:16px; justify-content:space-between; }
+    h1{ font-size: clamp(1.2rem, 2.5vw, 1.8rem); margin:0; letter-spacing:.3px; }
+    .btn{ display:inline-flex; align-items:center; gap:8px; background: var(--primary); color:#02160a; border: none; padding:10px 14px; border-radius:10px; font-weight:600; cursor:pointer; box-shadow: var(--shadow); transition: transform .05s ease, background .2s ease, box-shadow .2s ease; }
+    .btn.secondary{ background: #1f2937; color: var(--text); box-shadow:none; border:1px solid var(--border); }
+    .btn.ghost{ background: transparent; color: var(--muted); border:1px solid var(--border); box-shadow:none; }
+    .btn:hover{ transform: translateY(-1px); } .btn:active{ transform: translateY(0); }
+    .grid{ display:grid; gap:16px; grid-template-columns: 1.1fr .9fr; } @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
+    .card{ background: linear-gradient(180deg, #0d1429 0%, #091024 100%); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow:hidden; }
+    .card-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); }
+    .card-title{ margin:0; font-size:1rem; color:#dbeafe; letter-spacing:.2px; }
+    .card-body{ padding: 12px 16px 16px; }
+    .toolbar{ display:flex; gap:8px; flex-wrap:wrap; }
+    .list{ display:flex; flex-direction:column; gap:10px; margin:0; padding:0; list-style:none; }
+    .item{ display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center; background: #0b1222; border:1px solid var(--border); padding:12px; border-radius:10px; }
+    .item h4{ margin:0 0 4px; font-size:.98rem; }
+    .meta{ color: var(--muted); font-size:.85rem; display:flex; gap:12px; flex-wrap:wrap;}
+    .tag{ display:inline-flex; align-items:center; gap:6px; font-size:.78rem; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:#c7d2fe;background:#0e1326; }
+    .qty{ color:#bbf7d0; background: #052e1a; border-color: #064e3b; }
+    .shelf{ color:#fde68a; background: #3b2d07; border-color:#a16207; }
+    .actions{ display:flex; gap:8px; }
+    .empty{ text-align:center; color:var(--muted); padding:24px; border:1px dashed var(--border); border-radius:10px; background: repeating-linear-gradient( 45deg, #0a1225, #0a1225 10px, #081020 10px, #081020 20px); }
+    .pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; background:#0b1222; border:1px solid var(--border); color:#cbd5e1; font-size:.86rem; }
+    .shelves{ display:flex; flex-direction:column; gap:10px; }
+    .shelf-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#0b1222; }
+    .shelf-name{ font-weight:600; }
+    .shelf-row .row-actions{ display:flex; gap:8px; }
+    .modal-backdrop{ position:fixed; inset:0; background: rgba(2,6,23,.6); display:none; align-items:center; justify-content:center; padding:16px; z-index:100; }
+    .modal{ width: min(520px, 100%); background: linear-gradient(180deg, #0f172a 0%, #0b1328 100%); border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow); }
+    .modal header{ position:unset; backdrop-filter:none; background:transparent; border:none; }
+    .modal .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); }
+    .modal h3{ margin:0; font-size:1.1rem; }
+    .modal .modal-body{ padding:16px; display:flex; flex-direction:column; gap:12px; }
+    .modal .modal-footer{ padding:12px 16px 16px; display:flex; justify-content:flex-end; gap:8px; }
+    label{ font-size:.9rem; color:#cbd5e1; }
+    input, select{ width:100%; background:#0b1222; color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px; outline:none; }
+    input:focus, select:focus{ border-color:#334155; box-shadow: 0 0 0 3px rgba(51,65,85,.35); }
+    .danger{ background: var(--danger); color:#2b0808; }
+    .warning{ background: var(--warning); color:#231a02; }
+    .muted{ color: var(--muted); }
+    .row{ display:grid; gap:10px; grid-template-columns: 1fr 1fr; } @media (max-width:600px){ .row{ grid-template-columns: 1fr; } }
+    .sep{ height:1px; background: linear-gradient(90deg, transparent, #1f2937, transparent); margin:8px 0; }
+  </style>
 </head>
 <body>
-    <header>
+  <header>
+    <div class="container header-bar">
+      <div style="display:flex; align-items:center; gap:10px;">
         <h1>Freezer Overview</h1>
-        <button id="settings-btn">Settings</button>
-    </header>
-    <main>
-        <section id="items">
-            <h2>Items</h2>
-            <ul id="item-list">
-                <!-- Dynamic list of items will be generated here -->
-            </ul>
-            <button id="add-item-btn">Add Item</button>
-        </section>
-    </main>
-
-    <!-- Edit Modal -->
-    <div id="edit-modal" style="display:none;">
-        <h2>Edit Item</h2>
-        <form id="edit-item-form">
-            <input type="text" id="item-name" placeholder="Item Name" required />
-            <input type="number" id="item-quantity" placeholder="Quantity" required />
-            <button type="submit">Save</button>
-            <button type="button" id="close-edit-modal">Close</button>
-        </form>
+        <span class="pill" id="freezer-name-pill" title="Navn på fryser">Standard Fryser</span>
+      </div>
+      <div class="toolbar">
+        <button id="add-item-btn" class="btn">➕ Tilføj vare</button>
+        <button id="settings-btn" class="btn secondary">⚙️ Indstillinger</button>
+      </div>
     </div>
+  </header>
 
-    <!-- Photo Modal -->
-    <div id="photo-modal" style="display:none;">
-        <h2>Add Photo</h2>
-        <input type="file" id="photo-input" />
-        <button id="upload-photo-btn">Upload</button>
-        <button type="button" id="close-photo-modal">Close</button>
+  <main class="container" style="padding-top:20px; padding-bottom:40px;">
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Varer</h2>
+          <div class="toolbar"><span class="pill" id="item-count">0 varer</span></div>
+        </div>
+        <div class="card-body">
+          <ul class="list" id="item-list"></ul>
+          <div id="empty-items" class="empty" style="display:none;">Ingen varer endnu. Klik “Tilføj vare”.</div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="card-header">
+          <h2 class="card-title">Hylder</h2>
+          <div class="toolbar"><button id="add-shelf-btn" class="btn ghost">➕ Tilføj hylde</button></div>
+        </div>
+        <div class="card-body">
+          <div class="shelves" id="shelf-list"></div>
+          <div id="empty-shelves" class="empty" style="display:none;">Ingen hylder. Opret din første hylde.</div>
+        </div>
+      </aside>
     </div>
+  </main>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" style="display:none;">
-        <h2>Settings</h2>
-        <form id="settings-form">
-            <input type="text" id="freezer-name" placeholder="Freezer Name" required />
-            <button type="submit">Save</button>
-            <button type="button" id="close-settings-modal">Close</button>
-        </form>
+  <!-- Item Modal -->
+  <div class="modal-backdrop" id="item-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+      <div class="modal-header">
+        <h3 id="item-modal-title">Tilføj / Redigér vare</h3>
+        <button class="btn ghost" data-close="item-backdrop">✖</button>
+      </div>
+      <form id="edit-item-form">
+        <div class="modal-body">
+          <div>
+            <label for="item-name">Navn</label>
+            <input type="text" id="item-name" name="name" placeholder="Fx. Kyllingebryst" required />
+          </div>
+          <div class="row">
+            <div>
+              <label for="item-quantity">Mængde</label>
+              <input type="number" id="item-quantity" name="quantity" min="0" step="1" placeholder="Fx. 3" required />
+            </div>
+            <div>
+              <label for="item-shelf">Hylde</label>
+              <select id="item-shelf" name="shelfId" required></select>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="row">
+            <div>
+              <label for="item-photo">Foto (placeholder)</label>
+              <input type="file" id="item-photo" accept="image/*" />
+            </div>
+            <div>
+              <label for="item-notes">Noter (valgfrit)</label>
+              <input type="text" id="item-notes" name="notes" placeholder="Fx. indfrosset 10/03" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn ghost" data-close="item-backdrop">Annullér</button>
+          <button type="submit" class="btn">Gem</button>
+        </div>
+        <input type="hidden" id="item-id" />
+      </form>
     </div>
+  </div>
 
-    <script>
-        // JavaScript for modals and functionalities
-        document.getElementById('add-item-btn').addEventListener('click', function() {
-            // Open edit modal for adding new item
-            document.getElementById('edit-modal').style.display = 'block';
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settings-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+      <div class="modal-header">
+        <h3 id="settings-modal-title">Indstillinger</h3>
+        <button class="btn ghost" data-close="settings-backdrop">✖</button>
+      </div>
+      <form id="settings-form">
+        <div class="modal-body">
+          <div>
+            <label for="freezer-name">Frysernavn</label>
+            <input type="text" id="freezer-name" placeholder="Fx. Kælderfryser" required />
+          </div>
+          <p class="muted">Hylder kan omdøbes direkte i listen nedenfor (✏️), eller slettes (🗑️).</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn ghost" data-close="settings-backdrop">Luk</button>
+          <button type="submit" class="btn">Gem</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tiny toast -->
+  <div id="toast" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0b1222; border:1px solid var(--border); color:#d1fae5; padding:10px 14px; border-radius:10px; display:none; box-shadow:var(--shadow); z-index:200;"></div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    // ---------- Helpers & Safe Storage ----------
+    var STORAGE_KEY = 'freezer-state-v1';
+
+    function safeGetItem(key){
+      try{ return window.localStorage ? localStorage.getItem(key) : null; }
+      catch(e){ console.warn('localStorage get fejlede', e); return null; }
+    }
+    function safeSetItem(key, value){
+      try{ if(window.localStorage) localStorage.setItem(key, value); }
+      catch(e){ console.warn('localStorage set fejlede', e); }
+    }
+    function uuid(){
+      try{
+        if (window.crypto && typeof window.crypto.randomUUID === 'function'){
+          return window.crypto.randomUUID();
+        }
+      }catch(_){/**/}
+      // Fallback
+      return 'id-' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8); return v.toString(16);
+      });
+    }
+
+    function seedState(){
+      var shelves = [
+        { id: uuid(), name: 'Øverste hylde' },
+        { id: uuid(), name: 'Midterhylde' },
+        { id: uuid(), name: 'Nederste skuffe' },
+      ];
+      var items = [
+        { id: uuid(), name: 'Erter (pose)', quantity: 2, shelfId: shelves[2].id, notes: 'Indfrosset 10/03' },
+        { id: uuid(), name: 'Kyllingebryst', quantity: 4, shelfId: shelves[1].id },
+      ];
+      var freezerName = 'Standard Fryser';
+      var s = { freezerName: freezerName, shelves: shelves, items: items };
+      safeSetItem(STORAGE_KEY, JSON.stringify(s));
+      return s;
+    }
+
+    function loadState(){
+      var raw = safeGetItem(STORAGE_KEY);
+      if(!raw){ return null; }
+      try{ return JSON.parse(raw); }
+      catch(e){ console.warn('Kunne ikke parse state', e); return null; }
+    }
+    function saveState(){
+      safeSetItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // ---------- State ----------
+    var state = loadState() || seedState();
+
+    // ---------- DOM Refs ----------
+    var itemListEl = document.getElementById('item-list');
+    var emptyItemsEl = document.getElementById('empty-items');
+    var itemCountEl = document.getElementById('item-count');
+    var shelfListEl = document.getElementById('shelf-list');
+    var emptyShelvesEl = document.getElementById('empty-shelves');
+    var addItemBtn = document.getElementById('add-item-btn');
+    var addShelfBtn = document.getElementById('add-shelf-btn');
+    var settingsBtn = document.getElementById('settings-btn');
+    var freezerNamePill = document.getElementById('freezer-name-pill');
+
+    var itemBackdrop = document.getElementById('item-backdrop');
+    var settingsBackdrop = document.getElementById('settings-backdrop');
+    var toastEl = document.getElementById('toast');
+
+    var itemForm = document.getElementById('edit-item-form');
+    var itemIdInput = document.getElementById('item-id');
+    var itemNameInput = document.getElementById('item-name');
+    var itemQtyInput = document.getElementById('item-quantity');
+    var itemShelfSelect = document.getElementById('item-shelf');
+    var itemNotesInput = document.getElementById('item-notes');
+    var itemPhotoInput = document.getElementById('item-photo');
+
+    var settingsForm = document.getElementById('settings-form');
+    var freezerNameInput = document.getElementById('freezer-name');
+
+    // Guard: if critical elements missing, abort quietly
+    if(!itemListEl || !shelfListEl){ console.error('Kritiske elementer mangler'); return; }
+
+    // ---------- Rendering ----------
+    function renderAll(){
+      renderHeader();
+      renderShelves();
+      renderItems();
+      populateShelfSelect();
+    }
+    function renderHeader(){
+      freezerNamePill.textContent = state.freezerName || 'Min Fryser';
+    }
+    function renderItems(){
+      itemListEl.innerHTML = '';
+      var items = state.items || [];
+      itemCountEl.textContent = items.length + ' vare' + (items.length === 1 ? '' : 'r');
+
+      emptyItemsEl.style.display = items.length === 0 ? '' : 'none';
+
+      for(var i=0; i<items.length; i++){
+        var item = items[i];
+        var li = document.createElement('li');
+        li.className = 'item';
+
+        var left = document.createElement('div');
+        var right = document.createElement('div'); right.className = 'actions';
+
+        var h4 = document.createElement('h4'); h4.textContent = item.name;
+
+        var meta = document.createElement('div'); meta.className = 'meta';
+
+        var qty = document.createElement('span'); qty.className = 'tag qty'; qty.textContent = 'Mængde: ' + item.quantity;
+
+        var shelf = (state.shelves || []).find(function(s){ return s.id === item.shelfId; });
+        var shelfTag = document.createElement('span'); shelfTag.className = 'tag shelf'; shelfTag.textContent = 'Hylde: ' + (shelf ? shelf.name : '—');
+
+        var notes = document.createElement('span'); notes.className = 'tag'; notes.textContent = item.notes ? ('Noter: ' + item.notes) : 'Ingen noter';
+
+        meta.appendChild(qty); meta.appendChild(shelfTag); meta.appendChild(notes);
+        left.appendChild(h4); left.appendChild(meta);
+
+        var editBtn = document.createElement('button'); editBtn.className = 'btn secondary'; editBtn.textContent = '✏️ Redigér';
+        editBtn.addEventListener('click', (function(id){ return function(){ openItemModal(id); };})(item.id));
+
+        var photoBtn = document.createElement('button'); photoBtn.className = 'btn ghost'; photoBtn.textContent = '📷 Foto';
+        photoBtn.title = 'Upload/ændr foto (placeholder)';
+        photoBtn.addEventListener('click', function(){ showToast('Foto-upload er placeholder i denne demo – tilføj evt. rigtig upload senere.'); });
+
+        var delBtn = document.createElement('button'); delBtn.className = 'btn danger'; delBtn.textContent = '🗑️ Slet';
+        delBtn.addEventListener('click', (function(id){ return function(){ deleteItem(id); };})(item.id));
+
+        right.appendChild(editBtn); right.appendChild(photoBtn); right.appendChild(delBtn);
+        li.appendChild(left); li.appendChild(right);
+        itemListEl.appendChild(li);
+      }
+    }
+    function renderShelves(){
+      shelfListEl.innerHTML = '';
+      var shelves = state.shelves || [];
+      emptyShelvesEl.style.display = shelves.length === 0 ? '' : 'none';
+
+      for(var i=0; i<shelves.length; i++){
+        var s = shelves[i];
+        var row = document.createElement('div'); row.className = 'shelf-row';
+
+        var name = document.createElement('div'); name.className = 'shelf-name'; name.textContent = s.name;
+
+        var counts = document.createElement('div');
+        var count = (state.items || []).filter(function(it){ return it.shelfId === s.id; }).length;
+        counts.className = 'muted'; counts.textContent = count + ' vare' + (count === 1 ? '' : 'r');
+
+        var left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
+        left.appendChild(name); left.appendChild(counts);
+
+        var actions = document.createElement('div'); actions.className = 'row-actions';
+
+        var renameBtn = document.createElement('button'); renameBtn.className = 'btn secondary'; renameBtn.textContent = '✏️ Omdøb';
+        renameBtn.addEventListener('click', (function(id){ return function(){ renameShelfPrompt(id); };})(s.id));
+
+        var delBtn = document.createElement('button'); delBtn.className = 'btn danger'; delBtn.textContent = '🗑️ Slet';
+        delBtn.addEventListener('click', (function(id){ return function(){ deleteShelf(id); };})(s.id));
+
+        actions.appendChild(renameBtn); actions.appendChild(delBtn);
+
+        row.appendChild(left); row.appendChild(actions);
+        shelfListEl.appendChild(row);
+      }
+    }
+    function populateShelfSelect(){
+      itemShelfSelect.innerHTML = '';
+      var shelves = state.shelves || [];
+      if(shelves.length === 0){
+        var opt = document.createElement('option'); opt.value = ''; opt.textContent = 'Ingen hylder – opret i Indstillinger først';
+        itemShelfSelect.appendChild(opt); return;
+      }
+      for(var i=0; i<shelves.length; i++){
+        var s = shelves[i]; var opt = document.createElement('option');
+        opt.value = s.id; opt.textContent = s.name; itemShelfSelect.appendChild(opt);
+      }
+    }
+
+    // ---------- Items ----------
+    function openItemModal(itemId){
+      itemForm.reset();
+      itemIdInput.value = itemId ? itemId : '';
+      populateShelfSelect();
+
+      if(itemId){
+        var item = (state.items || []).find(function(i){ return i.id === itemId; });
+        if(!item){ showToast('Vare ikke fundet'); return; }
+        itemNameInput.value = item.name;
+        itemQtyInput.value = item.quantity;
+        itemNotesInput.value = item.notes || '';
+        itemShelfSelect.value = item.shelfId || '';
+      }else{
+        if(state.shelves && state.shelves[0]) itemShelfSelect.value = state.shelves[0].id;
+      }
+
+      openModal(itemBackdrop, itemNameInput);
+    }
+    itemForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var id = itemIdInput.value || uuid();
+      var name = (itemNameInput.value || '').trim();
+      var quantity = Number(itemQtyInput.value || 0);
+      var shelfId = itemShelfSelect.value;
+      var notes = (itemNotesInput.value || '').trim();
+
+      if(!name || !shelfId){ showToast('Udfyld navn og vælg hylde.'); return; }
+
+      var items = state.items || (state.items = []);
+      var idx = items.findIndex(function(i){ return i.id === id; });
+      var record = { id: id, name: name, quantity: quantity, shelfId: shelfId, notes: notes };
+
+      if(idx >= 0){ items[idx] = record; showToast('Vare opdateret.'); }
+      else{ items.push(record); showToast('Vare tilføjet.'); }
+
+      saveState(); renderItems(); closeModal(itemBackdrop);
+    });
+    function deleteItem(id){
+      if(!confirm('Er du sikker på, at du vil slette denne vare?')) return;
+      state.items = (state.items || []).filter(function(i){ return i.id !== id; });
+      saveState(); renderItems(); showToast('Vare slettet.');
+    }
+
+    // ---------- Shelves ----------
+    function addShelf(){
+      var name = prompt('Navn på ny hylde:', 'Hylde ' + ((state.shelves || []).length + 1));
+      if(!name) return;
+      (state.shelves || (state.shelves = [])).push({ id: uuid(), name: name.trim() });
+      saveState(); renderShelves(); populateShelfSelect(); showToast('Hylde tilføjet.');
+    }
+    function renameShelfPrompt(id){
+      var shelf = (state.shelves || []).find(function(s){ return s.id === id; });
+      if(!shelf){ showToast('Hylde ikke fundet.'); return; }
+      var name = prompt('Nyt navn på hylde:', shelf.name);
+      if(!name || name.trim() === shelf.name) return;
+      shelf.name = name.trim();
+      saveState(); renderShelves(); renderItems(); populateShelfSelect(); showToast('Hylde omdøbt.');
+    }
+    function deleteShelf(id){
+      var count = (state.items || []).filter(function(i){ return i.shelfId === id; }).length;
+      var msg = count > 0 ? ('Hylden indeholder ' + count + ' vare' + (count===1?'':'r') + '. Slette alligevel? (Varer får hylde = ingen)') : 'Slette denne hylde?';
+      if(!confirm(msg)) return;
+
+      state.shelves = (state.shelves || []).filter(function(s){ return s.id !== id; });
+      state.items = (state.items || []).map(function(i){ return i.shelfId === id ? { id:i.id, name:i.name, quantity:i.quantity, shelfId:'', notes:i.notes } : i; });
+
+      saveState(); renderShelves(); renderItems(); populateShelfSelect(); showToast('Hylde slettet.');
+    }
+
+    // ---------- Settings ----------
+    function openSettings(){
+      freezerNameInput.value = state.freezerName || '';
+      openModal(settingsBackdrop, freezerNameInput);
+    }
+    settingsForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      state.freezerName = (freezerNameInput.value || 'Min Fryser').trim();
+      saveState(); renderHeader(); showToast('Indstillinger gemt.'); closeModal(settingsBackdrop);
+    });
+
+    // ---------- Modal utils ----------
+    function openModal(backdrop, focusEl){
+      backdrop.style.display = 'flex';
+      backdrop.setAttribute('aria-hidden','false');
+      setTimeout(function(){ try{ focusEl && focusEl.focus(); }catch(_){/**/} }, 10);
+    }
+    function closeModal(backdrop){
+      backdrop.style.display = 'none';
+      backdrop.setAttribute('aria-hidden','true');
+    }
+    document.body.addEventListener('click', function(e){
+      var closeTarget = e.target.closest ? e.target.closest('[data-close]') : null;
+      if(closeTarget){
+        var id = closeTarget.getAttribute('data-close');
+        var el = document.getElementById(id);
+        if(el) closeModal(el);
+      }
+    });
+    [itemBackdrop, settingsBackdrop].forEach(function(bd){
+      if(!bd) return;
+      bd.addEventListener('mousedown', function(e){ if(e.target === bd) closeModal(bd); });
+    });
+    window.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){
+        [itemBackdrop, settingsBackdrop].forEach(function(bd){
+          if(bd && bd.getAttribute('aria-hidden') === 'false') closeModal(bd);
         });
+      }
+    });
 
-        document.getElementById('close-edit-modal').addEventListener('click', function() {
-            document.getElementById('edit-modal').style.display = 'none';
-        });
+    // ---------- Toast ----------
+    var toastTimer;
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ toastEl.style.display = 'none'; }, 2200);
+    }
 
-        // Handle edit item submission
-        document.getElementById('edit-item-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            // Logic for updating item...
-            document.getElementById('edit-modal').style.display = 'none';
-        });
+    // ---------- Events ----------
+    if(addItemBtn) addItemBtn.addEventListener('click', function(){ openItemModal(null); });
+    if(addShelfBtn) addShelfBtn.addEventListener('click', addShelf);
+    if(settingsBtn) settingsBtn.addEventListener('click', openSettings);
 
-        // Similar functions for photo modal and settings modal
-    </script>
+    // ---------- Init ----------
+    try{ renderAll(); }
+    catch(e){ console.error('Render fejlede:', e); showToast('Noget gik galt under rendering. Tjek konsollen.'); }
+  });
+  </script>
 </body>
 </html>
