@@ -6,69 +6,343 @@
 <title>Fryser Overblik</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4a7cff">
+<meta name="theme-color" content="#2196F3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fryser">
 
 <style>
-body{
-font-family:Arial;
-background:#eef4ff;
-padding:20px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-h1{
-text-align:center;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 15px;
 }
 
-.item{
-background:white;
-padding:10px;
-margin:10px 0;
-border-radius:10px;
-display:flex;
-justify-content:space-between;
+.container {
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-button{
-padding:6px 10px;
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  font-size: 28px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.add-section {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.add-section h2 {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-group {
+  margin-bottom: 12px;
 }
 
 input, select {
-padding: 8px;
-margin: 5px;
-border-radius: 5px;
-border: 1px solid #ccc;
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  font-family: inherit;
 }
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #667eea;
+  background: #f5f7ff;
+}
+
+.photo-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.photo-btn, .camera-btn {
+  flex: 1;
+  padding: 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.camera-btn {
+  background: #FF6B6B;
+}
+
+.photo-btn:active, .camera-btn:active {
+  transform: scale(0.95);
+}
+
+.photo-preview {
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 2px solid #667eea;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.add-btn {
+  flex: 1;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.add-btn:active {
+  transform: scale(0.98);
+}
+
+.clear-btn {
+  padding: 12px 15px;
+  background: #f0f0f0;
+  color: #666;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.clear-btn:active {
+  background: #e0e0e0;
+}
+
+h3 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.list-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.item {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.item:active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.item-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f0f0f0;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
+}
+
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-name {
+  font-weight: 700;
+  color: #333;
+  font-size: 16px;
+}
+
+.item-place {
+  color: #999;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.item-amount {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 6px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.amount-btn, .delete-btn {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.amount-btn {
+  background: #FFD93D;
+  color: #333;
+}
+
+.delete-btn {
+  background: #FF6B6B;
+  color: white;
+}
+
+.amount-btn:active, .delete-btn:active {
+  transform: scale(0.95);
+}
+
+.empty-message {
+  text-align: center;
+  color: white;
+  padding: 40px 20px;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+#fileInput {
+  display: none;
+}
+
+.location-group {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.location-group label {
+  display: block;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
 </style>
 
 </head>
 
 <body>
 
+<div class="container">
+
 <h1>❄️ Fryser Overblik</h1>
 
-<input id="name" placeholder="Vare">
-<input id="amount" type="number" placeholder="Antal">
+<div class="add-section">
+  <h2>➕ Tilføj Vare</h2>
+  
+  <div class="form-group">
+    <input id="name" type="text" placeholder="Varenavn (f.eks. Køkkenchili)" maxlength="30">
+  </div>
 
-<select id="place">
-<option>Skabsfryser Hylde 1</option>
-<option>Skabsfryser Hylde 2</option>
-<option>Skuffe 1</option>
-<option>Skuffe 2</option>
-<option>Skuffe 3</option>
-<option>Skuffe 4</option>
-<option>Kombi Hylde 1</option>
-<option>Kombi Hylde 2</option>
-<option>Kombi Hylde 3</option>
-</select>
+  <div class="form-group">
+    <input id="amount" type="number" placeholder="Antal" min="1" value="1">
+  </div>
 
-<button onclick="addItem()">Tilføj</button>
+  <div class="form-group">
+    <div class="location-group">
+      <label>📦 Bosch GSN58AWDP (Fryseskab)</label>
+      <select id="place-freezer">
+        <option value="">-- Vælg hylder --</option>
+        <option>Fryseskab - Hylde 1 (Top)</option>
+        <option>Fryseskab - Hylde 2</option>
+        <option>Fryseskab - Hylde 3</option>
+        <option>Fryseskab - Hylde 4 (Bund)</option>
+        <option>Fryseskab - Skuffe (Frostfrisk)</option>
+      </select>
+    </div>
 
-<h2>Indhold</h2>
+    <div class="location-group">
+      <label>🧊 Scandomestic SKF 231 W (Køle-/Fryseskab)</label>
+      <select id="place-combo">
+        <option value="">-- Vælg plads --</option>
+        <option>Køler - Topfrosting</option>
+        <option>Køler - Hylde 1</option>
+        <option>Køler - Hylde 2</option>
+        <option>Køler - Grøntsagsskuffe</option>
+        <option>Fryserdel - Hylde 1</option>
+        <option>Fryserdel - Hylde 2</option>
+        <option>Fryserdel - Skuffe</option>
+      </select>
+    </div>
+  </div>
 
-<div id="list"></div>
+  <div class="photo-section">
+    <button class="photo-btn" onclick="document.getElementById('fileInput').click()">📷 Upload Foto</button>
+    <button class="camera-btn" onclick="takePhoto()">📸 Tag Billede</button>
+  </div>
+
+  <img id="photoPreview" class="photo-preview" style="display:none;">
+
+  <div class="button-group">
+    <button class="add-btn" onclick="addItem()">Tilføj Vare</button>
+    <button class="clear-btn" onclick="clearForm()">Slet</button>
+  </div>
+</div>
+
+<h3>📋 Inventar</h3>
+
+<div id="list" class="list-container"></div>
+
+<div id="emptyMsg" class="empty-message">
+  Intet i inventaret endnu. Tilføj din første vare! 🎉
+</div>
+
+</div>
+
+<input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+<video id="video" style="display:none;"></video>
+<canvas id="canvas" style="display:none;"></canvas>
 
 <script>
 
@@ -78,81 +352,149 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-let items = JSON.parse(localStorage.getItem("fryser")) || []
+let items = JSON.parse(localStorage.getItem("fryser")) || [];
+let currentPhoto = null;
 
-function save(){
-localStorage.setItem("fryser",JSON.stringify(items))
+function save() {
+  localStorage.setItem("fryser", JSON.stringify(items));
+  render();
 }
 
-function render(){
+function render() {
+  let list = document.getElementById("list");
+  let emptyMsg = document.getElementById("emptyMsg");
+  list.innerHTML = "";
 
-let list = document.getElementById("list")
-list.innerHTML=""
+  if (items.length === 0) {
+    emptyMsg.style.display = "block";
+    return;
+  }
 
-items.forEach((item,index)=>{
+  emptyMsg.style.display = "none";
 
-let div=document.createElement("div")
+  items.forEach((item, index) => {
+    let div = document.createElement("div");
+    div.className = "item";
 
-div.className="item"
+    let photoImg = item.photo ? `<img src="${item.photo}" class="item-photo">` : `<div class="item-photo" style="background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#ccc;">📷</div>`;
 
-div.innerHTML=`
-<div>
-<strong>${item.name}</strong><br>
-${item.amount} stk<br>
-${item.place}
-</div>
+    div.innerHTML = `
+      ${photoImg}
+      <div class="item-content">
+        <div class="item-name">${item.name}</div>
+        <div class="item-place">${item.place}</div>
+        <div class="item-amount">${item.amount} stk</div>
+      </div>
+      <div class="item-actions">
+        <button class="amount-btn" onclick="decreaseAmount(${index})">➖</button>
+        <button class="delete-btn" onclick="deleteItem(${index})">❌</button>
+      </div>
+    `;
 
-<div>
-<button onclick="takeOne(${index})">➖</button>
-<button onclick="deleteItem(${index})">❌</button>
-</div>
-`
+    list.appendChild(div);
+  });
 
-list.appendChild(div)
-
-})
-
-save()
-
+  save();
 }
 
-function addItem(){
+function addItem() {
+  let name = document.getElementById("name").value.trim();
+  let amount = parseInt(document.getElementById("amount").value) || 1;
+  let place = document.getElementById("place-freezer").value || document.getElementById("place-combo").value;
 
-let name=document.getElementById("name").value
-let amount=document.getElementById("amount").value
-let place=document.getElementById("place").value
+  if (!name) {
+    alert("Indtast venligst et varenavn");
+    return;
+  }
 
-if(!name || !amount) return
+  if (!place) {
+    alert("Vælg venligst en placering");
+    return;
+  }
 
-items.push({name,amount,place})
-document.getElementById("name").value = ""
-document.getElementById("amount").value = ""
+  items.push({
+    name: name,
+    amount: amount,
+    place: place,
+    photo: currentPhoto
+  });
 
-render()
-
+  clearForm();
+  save();
 }
 
-function takeOne(i){
-
-items[i].amount--
-
-if(items[i].amount<=0){
-items.splice(i,1)
+function decreaseAmount(i) {
+  items[i].amount--;
+  if (items[i].amount <= 0) {
+    items.splice(i, 1);
+  }
+  save();
 }
 
-render()
-
+function deleteItem(i) {
+  items.splice(i, 1);
+  save();
 }
 
-function deleteItem(i){
-
-items.splice(i,1)
-
-render()
-
+function clearForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("amount").value = "1";
+  document.getElementById("place-freezer").value = "";
+  document.getElementById("place-combo").value = "";
+  document.getElementById("photoPreview").style.display = "none";
+  currentPhoto = null;
 }
 
-render()
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentPhoto = e.target.result;
+      document.getElementById("photoPreview").src = currentPhoto;
+      document.getElementById("photoPreview").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function takePhoto() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+
+  if (!video.srcObject) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        video.style.display = 'block';
+        setTimeout(() => {
+          capturePhoto();
+        }, 1000);
+      })
+      .catch(err => alert("Kamera adgang blev nægtet"));
+  }
+}
+
+function capturePhoto() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    
+    currentPhoto = canvas.toDataURL('image/jpeg');
+    document.getElementById("photoPreview").src = currentPhoto;
+    document.getElementById("photoPreview").style.display = "block";
+
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = 'none';
+  }
+}
+
+render();
 
 </script>
 
