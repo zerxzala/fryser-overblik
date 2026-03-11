@@ -38,6 +38,25 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+.settings-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s;
+}
+
+.settings-btn:active {
+  transform: scale(0.95);
+}
+
 .add-section {
   background: white;
   border-radius: 15px;
@@ -167,6 +186,7 @@ h3 {
   display: flex;
   gap: 12px;
   transition: all 0.3s;
+  position: relative;
 }
 
 .item:active {
@@ -182,6 +202,23 @@ h3 {
   background: #f0f0f0;
   flex-shrink: 0;
   border: 2px solid #e0e0e0;
+  cursor: pointer;
+  position: relative;
+}
+
+.photo-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 24px;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
 }
 
 .item-content {
@@ -195,12 +232,22 @@ h3 {
   font-weight: 700;
   color: #333;
   font-size: 16px;
+  cursor: pointer;
+}
+
+.item-name:hover {
+  color: #667eea;
 }
 
 .item-place {
   color: #999;
   font-size: 13px;
   margin-top: 4px;
+  cursor: pointer;
+}
+
+.item-place:hover {
+  color: #667eea;
 }
 
 .item-amount {
@@ -217,7 +264,7 @@ h3 {
   justify-content: space-between;
 }
 
-.amount-btn, .delete-btn {
+.amount-btn, .delete-btn, .photo-add-btn, .edit-btn {
   padding: 8px 10px;
   border: none;
   border-radius: 6px;
@@ -237,7 +284,19 @@ h3 {
   color: white;
 }
 
-.amount-btn:active, .delete-btn:active {
+.photo-add-btn {
+  background: #4ECDC4;
+  color: white;
+  font-size: 12px;
+}
+
+.edit-btn {
+  background: #95E1D3;
+  color: #333;
+  font-size: 12px;
+}
+
+.amount-btn:active, .delete-btn:active, .photo-add-btn:active, .edit-btn:active {
   transform: scale(0.95);
 }
 
@@ -249,7 +308,7 @@ h3 {
   opacity: 0.9;
 }
 
-#fileInput {
+#fileInput, .file-input-hidden {
   display: none;
 }
 
@@ -268,11 +327,151 @@ h3 {
   font-size: 13px;
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: black;
+}
+
+.modal h2 {
+  color: #333;
+  margin-bottom: 15px;
+  clear: both;
+}
+
+.modal-photo-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-photo-btn {
+  flex: 1;
+  padding: 10px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.modal-camera-btn {
+  background: #FF6B6B;
+}
+
+.modal-photo-preview {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 2px solid #667eea;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-save-btn, .modal-cancel-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-save-btn {
+  background: #667eea;
+  color: white;
+}
+
+.modal-cancel-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.settings-form-group {
+  margin-bottom: 15px;
+}
+
+.settings-form-group label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.settings-form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.settings-save-btn, .settings-cancel-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settings-save-btn {
+  background: #667eea;
+  color: white;
+}
+
+.settings-cancel-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
 </style>
 
 </head>
 
 <body>
+
+<button class="settings-btn" onclick="openSettingsModal()">⚙️</button>
 
 <div class="container">
 
@@ -291,19 +490,19 @@ h3 {
 
   <div class="form-group">
     <div class="location-group">
-      <label>📦 Bosch GSN58AWDP (Fryseskab)</label>
+      <label id="freezer-label">📦 Fryseskab</label>
       <select id="place-freezer">
         <option value="">-- Vælg hylder --</option>
-        <option>Fryseskab - Hylde 1 (Top)</option>
-        <option>Fryseskab - Hylde 2</option>
-        <option>Fryseskab - Hylde 3</option>
-        <option>Fryseskab - Hylde 4 (Bund)</option>
-        <option>Fryseskab - Skuffe (Frostfrisk)</option>
+        <option>Hylde 1 (Top)</option>
+        <option>Hylde 2</option>
+        <option>Hylde 3</option>
+        <option>Hylde 4 (Bund)</option>
+        <option>Skuffe (Frostfrisk)</option>
       </select>
     </div>
 
     <div class="location-group">
-      <label>🧊 Scandomestic SKF 231 W (Køle-/Fryseskab)</label>
+      <label id="combo-label">🧊 Køle-/Fryseskab</label>
       <select id="place-combo">
         <option value="">-- Vælg plads --</option>
         <option>Køler - Topfrosting</option>
@@ -340,9 +539,85 @@ h3 {
 
 </div>
 
+<!-- Settings Modal -->
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeSettingsModal()">&times;</span>
+    <h2>⚙️ Indstillinger</h2>
+    
+    <div class="settings-form-group">
+      <label>Navn på Fryseskab:</label>
+      <input id="freezer-name" type="text" placeholder="f.eks. Bosch GSN58AWDP" maxlength="40">
+    </div>
+
+    <div class="settings-form-group">
+      <label>Navn på Køle-/Fryseskab:</label>
+      <input id="combo-name" type="text" placeholder="f.eks. Scandomestic SKF 231 W" maxlength="40">
+    </div>
+
+    <div class="settings-actions">
+      <button class="settings-save-btn" onclick="saveSettings()">Gem</button>
+      <button class="settings-cancel-btn" onclick="closeSettingsModal()">Annuller</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for editing item -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeEditModal()">&times;</span>
+    <h2>✏️ Rediger Vare</h2>
+    
+    <div class="settings-form-group">
+      <label>Varenavn:</label>
+      <input id="edit-name" type="text" placeholder="Varenavn" maxlength="30">
+    </div>
+
+    <div class="settings-form-group">
+      <label>Antal:</label>
+      <input id="edit-amount" type="number" placeholder="Antal" min="1">
+    </div>
+
+    <div class="settings-form-group">
+      <label>Placering:</label>
+      <select id="edit-place">
+        <option value="">-- Vælg plads --</option>
+      </select>
+    </div>
+
+    <div class="settings-actions">
+      <button class="settings-save-btn" onclick="saveEditItem()">Gem Ændringer</button>
+      <button class="settings-cancel-btn" onclick="closeEditModal()">Annuller</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for editing photo -->
+<div id="photoModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closePhotoModal()">&times;</span>
+    <h2>📸 Tilføj Billede</h2>
+    
+    <div class="modal-photo-section">
+      <button class="modal-photo-btn" onclick="document.getElementById('modalFileInput').click()">📷 Upload</button>
+      <button class="modal-photo-btn modal-camera-btn" onclick="takePhotoModal()">📸 Tag</button>
+    </div>
+
+    <img id="modalPhotoPreview" class="modal-photo-preview" style="display:none;">
+
+    <div class="modal-actions">
+      <button class="modal-save-btn" onclick="savePhotoToItem()">Gem Billede</button>
+      <button class="modal-cancel-btn" onclick="closePhotoModal()">Annuller</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+<input type="file" id="modalFileInput" accept="image/*" onchange="handleModalFileSelect(event)" class="file-input-hidden">
 <video id="video" style="display:none;"></video>
+<video id="modalVideo" style="display:none;"></video>
 <canvas id="canvas" style="display:none;"></canvas>
+<canvas id="modalCanvas" style="display:none;"></canvas>
 
 <script>
 
@@ -354,6 +629,36 @@ if ('serviceWorker' in navigator) {
 
 let items = JSON.parse(localStorage.getItem("fryser")) || [];
 let currentPhoto = null;
+let currentPhotoModalIndex = null;
+let currentPhotoModal = null;
+let currentEditIndex = null;
+
+// Navn på fryserne
+let freezerName = localStorage.getItem("freezerName") || "📦 Fryseskab";
+let comboName = localStorage.getItem("comboName") || "🧊 Køle-/Fryseskab";
+
+const freezerOptions = [
+  "Hylde 1 (Top)",
+  "Hylde 2",
+  "Hylde 3",
+  "Hylde 4 (Bund)",
+  "Skuffe (Frostfrisk)"
+];
+
+const comboOptions = [
+  "Køler - Topfrosting",
+  "Køler - Hylde 1",
+  "Køler - Hylde 2",
+  "Køler - Grøntsagsskuffe",
+  "Fryserdel - Hylde 1",
+  "Fryserdel - Hylde 2",
+  "Fryserdel - Skuffe"
+];
+
+function updateLabels() {
+  document.getElementById("freezer-label").textContent = freezerName;
+  document.getElementById("combo-label").textContent = comboName;
+}
 
 function save() {
   localStorage.setItem("fryser", JSON.stringify(items));
@@ -376,16 +681,23 @@ function render() {
     let div = document.createElement("div");
     div.className = "item";
 
-    let photoImg = item.photo ? `<img src="${item.photo}" class="item-photo">` : `<div class="item-photo" style="background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#ccc;">📷</div>`;
+    let photoElement = '';
+    if (item.photo) {
+      photoElement = `<img src="${item.photo}" class="item-photo" onclick="openPhotoModal(${index})">`;
+    } else {
+      photoElement = `<div class="photo-placeholder" onclick="openPhotoModal(${index})">📷</div>`;
+    }
 
     div.innerHTML = `
-      ${photoImg}
+      ${photoElement}
       <div class="item-content">
-        <div class="item-name">${item.name}</div>
-        <div class="item-place">${item.place}</div>
+        <div class="item-name" onclick="openEditModal(${index})">${item.name}</div>
+        <div class="item-place" onclick="openEditModal(${index})">${item.place}</div>
         <div class="item-amount">${item.amount} stk</div>
       </div>
       <div class="item-actions">
+        <button class="photo-add-btn" onclick="openPhotoModal(${index})">🖼️</button>
+        <button class="edit-btn" onclick="openEditModal(${index})">✏️</button>
         <button class="amount-btn" onclick="decreaseAmount(${index})">➖</button>
         <button class="delete-btn" onclick="deleteItem(${index})">❌</button>
       </div>
@@ -458,6 +770,19 @@ function handleFileSelect(event) {
   }
 }
 
+function handleModalFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentPhotoModal = e.target.result;
+      document.getElementById("modalPhotoPreview").src = currentPhotoModal;
+      document.getElementById("modalPhotoPreview").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
 function takePhoto() {
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
@@ -494,6 +819,174 @@ function capturePhoto() {
   }
 }
 
+function takePhotoModal() {
+  const video = document.getElementById('modalVideo');
+  const canvas = document.getElementById('modalCanvas');
+
+  if (!video.srcObject) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        video.style.display = 'block';
+        setTimeout(() => {
+          capturePhotoModal();
+        }, 1000);
+      })
+      .catch(err => alert("Kamera adgang blev nægtet"));
+  }
+}
+
+function capturePhotoModal() {
+  const video = document.getElementById('modalVideo');
+  const canvas = document.getElementById('modalCanvas');
+
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    
+    currentPhotoModal = canvas.toDataURL('image/jpeg');
+    document.getElementById("modalPhotoPreview").src = currentPhotoModal;
+    document.getElementById("modalPhotoPreview").style.display = "block";
+
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = 'none';
+  }
+}
+
+function openPhotoModal(index) {
+  currentPhotoModalIndex = index;
+  currentPhotoModal = items[index].photo;
+  
+  if (currentPhotoModal) {
+    document.getElementById("modalPhotoPreview").src = currentPhotoModal;
+    document.getElementById("modalPhotoPreview").style.display = "block";
+  } else {
+    document.getElementById("modalPhotoPreview").style.display = "none";
+  }
+  
+  document.getElementById("photoModal").style.display = "block";
+}
+
+function closePhotoModal() {
+  document.getElementById("photoModal").style.display = "none";
+  document.getElementById("modalPhotoPreview").style.display = "none";
+  currentPhotoModal = null;
+  currentPhotoModalIndex = null;
+  
+  const video = document.getElementById('modalVideo');
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = 'none';
+  }
+}
+
+function savePhotoToItem() {
+  if (currentPhotoModalIndex !== null && currentPhotoModal) {
+    items[currentPhotoModalIndex].photo = currentPhotoModal;
+    save();
+    closePhotoModal();
+  } else {
+    alert("Vælg venligst et billede først");
+  }
+}
+
+function openEditModal(index) {
+  currentEditIndex = index;
+  const item = items[index];
+  
+  document.getElementById("edit-name").value = item.name;
+  document.getElementById("edit-amount").value = item.amount;
+  
+  // Udfyld valgmulighederne
+  const editPlace = document.getElementById("edit-place");
+  editPlace.innerHTML = '<option value="">-- Vælg plads --</option>';
+  
+  freezerOptions.forEach(opt => {
+    editPlace.innerHTML += `<option>${opt}</option>`;
+  });
+  editPlace.innerHTML += '<option disabled>─────────</option>';
+  comboOptions.forEach(opt => {
+    editPlace.innerHTML += `<option>${opt}</option>`;
+  });
+  
+  editPlace.value = item.place;
+  
+  document.getElementById("editModal").style.display = "block";
+}
+
+function closeEditModal() {
+  document.getElementById("editModal").style.display = "none";
+  currentEditIndex = null;
+}
+
+function saveEditItem() {
+  if (currentEditIndex !== null) {
+    const newName = document.getElementById("edit-name").value.trim();
+    const newAmount = parseInt(document.getElementById("edit-amount").value) || 1;
+    const newPlace = document.getElementById("edit-place").value;
+    
+    if (!newName) {
+      alert("Indtast venligst et varenavn");
+      return;
+    }
+    
+    if (!newPlace) {
+      alert("Vælg venligst en placering");
+      return;
+    }
+    
+    items[currentEditIndex].name = newName;
+    items[currentEditIndex].amount = newAmount;
+    items[currentEditIndex].place = newPlace;
+    
+    save();
+    closeEditModal();
+  }
+}
+
+function openSettingsModal() {
+  document.getElementById("freezer-name").value = freezerName.replace("📦 ", "");
+  document.getElementById("combo-name").value = comboName.replace("🧊 ", "");
+  document.getElementById("settingsModal").style.display = "block";
+}
+
+function closeSettingsModal() {
+  document.getElementById("settingsModal").style.display = "none";
+}
+
+function saveSettings() {
+  let newFreezerName = document.getElementById("freezer-name").value.trim() || "Fryseskab";
+  let newComboName = document.getElementById("combo-name").value.trim() || "Køle-/Fryseskab";
+
+  freezerName = "📦 " + newFreezerName;
+  comboName = "🧊 " + newComboName;
+
+  localStorage.setItem("freezerName", freezerName);
+  localStorage.setItem("comboName", comboName);
+
+  updateLabels();
+  closeSettingsModal();
+}
+
+window.onclick = function(event) {
+  const photoModal = document.getElementById("photoModal");
+  const settingsModal = document.getElementById("settingsModal");
+  const editModal = document.getElementById("editModal");
+  
+  if (event.target == photoModal) {
+    closePhotoModal();
+  }
+  if (event.target == settingsModal) {
+    closeSettingsModal();
+  }
+  if (event.target == editModal) {
+    closeEditModal();
+  }
+}
+
+updateLabels();
 render();
 
 </script>
